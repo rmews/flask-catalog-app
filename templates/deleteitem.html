@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "header.html" %}
+{% include "flashmessages.html" %}
+
+<div class="container my-5">
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+        <div class="card text-center">
+            <div class="card-body">
+                <form action="{{url_for('delete_item', category_name=item.category.name, item_name=item.name)}}" method="post">
+                    <h4 class="card-title">Are you sure you want to delete this item?</h4>
+                    <div class="row mt-4 justify-content-center">
+                        <button type="submit" class="btn btn-danger" id="submit">Delete</button>
+                    </div>
+                    <div class="row mt-3 justify-content-center">
+                        <a href="{{url_for('show_catalog')}}">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

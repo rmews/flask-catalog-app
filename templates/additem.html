@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "header.html" %}
+{% include "flashmessages.html" %}
+
+<div class="container my-5">
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{url_for('add_item')}}" method="post">
+                        <h4 class="card-title text-center">Add Item</h4>
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" name="name" id="name" maxlength="80" placeholder="Name of the item">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea class="form-control" name="description" id="description" maxlength="2000" rows="3" placeholder="Description of the item"></textarea>
+                        </div>
+                        <label for="category">Category:</label>
+                        <select class="form-control" name="category">
+                        {% for category in categories %}
+                            <option value="{{category.name}}">{{category.name}}</option>
+                        {% endfor %}
+                        </select>
+                        <div class="row mt-4 justify-content-center">
+                            <button type="submit" class="btn btn-primary" id="submit">Add Item</button>
+                        </div>
+                        <div class="row mt-3 justify-content-center">
+                            <a href="{{url_for('show_catalog')}}">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

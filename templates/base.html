@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Catalog App</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{url_for('static', filename='base.css')}}">
+
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/10ed7a1699.js"></script>
+
+    <!-- Google Sign-in -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start"></script>
+</head>
+<body class="bg-light">
+    {% block content %}
+    {% endblock %}
+    <!-- Google Login -->
+    <script>
+        function signInCallback(authResult) {
+            if (authResult['code']) {
+                // Hide sing-in button if user is authorized
+                $('#signinButton').attr('style', 'display: none');
+                // Send one-time use code to server.
+                // If server responds, write log-in successful message and redirect to main page
+                $.ajax({
+                    type: 'POST',
+                    url: '/gconnect?state={{state}}',
+                    processData: false,
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    data: authResult['code'],
+                    success: function(result) {
+                        if (result) {
+                            window.location.href = "/catalog";
+                        } else if (authResult['error']) {
+                            console.log('There was an error: ' + authResult['error']);
+                        } else {
+                            $('#result').html('Failed to make a server call. Check your configuration and console.');
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+    <!-- Facebook Login -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId   : '355946968167165',
+                cookie  : true,  // enable cookies to allow the server to access the session
+                xfbml   : true,  // parse social plugins on this page
+                version : 'v2.2' // use version 2.2
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        } (document, 'script', 'facebook-jssdk'));
+
+        // Here we run a very simple test of the Graph API after login is successful. See statusChangeCallback() for when this call is made.
+        function sendTokenToServer() {
+            var access_token = FB.getAuthResponse()['accessToken'];
+            FB.api('/me', function(response) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/fbconnect?state={{state}}',
+                    processData: false,
+                    data: access_token,
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function(result) {
+                        // Handle or verify the server response if necessary.
+                        if (result) {
+                            window.location.href = "/catalog";
+                        } else {
+                            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+</body>
+</html>
