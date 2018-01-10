@@ -16,7 +16,7 @@ from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 app = Flask(__name__)
 
 # Connect to database and create database session
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://catalog:udacity2018@localhost/catalog')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -539,4 +539,5 @@ def catalog_api():
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
+    # app.run(host='0.0.0.0', port=5000)

@@ -48,5 +48,5 @@ class Item(Base):
             'user_id'       : self.user_id,
         }
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://catalog:udacity2018@localhost/catalog')
 Base.metadata.create_all(engine)
