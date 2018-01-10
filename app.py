@@ -102,9 +102,9 @@ def fbconnect():
     access_token = request.data
 
     # Exchange client token for long-lived server-side token with GET
-    app_id = json.loads(open('fb_client_secrets.json',
+    app_id = json.loads(open(r'/var/www/FlaskApp/Catalog/flask-catalog-app/fb_client_secrets.json',
                              'r').read())['web']['app_id']
-    app_secret = json.loads(open('fb_client_secrets.json',
+    app_secret = json.loads(open(r'/var/www/FlaskApp/Catalog/flask-catalog-app/fb_client_secrets.json',
                                  'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=' \
         'fb_exchange_token&client_id=%s&client_secret=%s' \
